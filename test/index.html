@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+
+<body>
+    <div style="margin: 20px;">
+      H264:
+        <input type="file" onchange="handleVideoFiles(this.files, 0)">
+    </div>
+    <div style="margin: 20px;">
+      H265:
+        <input type="file" onchange="handleVideoFiles(this.files, 1)">
+    </div>
+    <div style="margin: 20px;">
+      <button id="stop" onclick="stop()">stop</button>
+    </div>
+
+  <div style="margin-top: 10px">
+    <canvas id="playCanvas"></canvas>
+  </div>
+  <div style="margin-top: 10px">
+    <canvas id="playCanvas2"></canvas>
+  </div>
+
+  <script src="../dist/libdecoder_264_265.js"></script>
+  <script src="video_play.js"></script>
+  <script src="webgl.js"></script>
+
+</body>
+</html>
