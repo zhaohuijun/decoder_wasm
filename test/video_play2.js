@@ -34,7 +34,7 @@ async function decode_seq(file_list, file_idx) {
 
     var videoSize = 0;
     var videoCallback = Module.addFunction(function (addr_y, addr_u, addr_v, stride_y, stride_u, stride_v, width, height, pts) {
-        // console.log("[%d]In video callback, size = %d * %d, pts = %d", ++videoSize, width, height, pts)
+        console.log("[%d]In video callback, size = %d * %d, pts = %d", ++videoSize, width, height, pts)
         let size = width * height + (width / 2)  * (height / 2) + (width / 2)  * (height / 2)
         let data = new Uint8Array(size)
         let pos = 0
@@ -174,58 +174,6 @@ function displayVideoFrame(obj) {
         });
     }
     webglPlayer.renderFrame(data, width, height, yLength, uvLength);
-}
-
-var tm = 0
-async function displayVideoFrame2(obj) {
-    var now = Number(new Date())
-    if (!tm) {
-        tm = now
-    }
-    // console.log('display:', now - tm, obj)
-    canvas = document.getElementById('playCanvas2')
-    const oc = canvas.getContext('2d')
-    const img = new ImageData(obj.width, obj.height)
-    console.log('img:', img)
-    const len = obj.width * obj.height
-    const hWidth = obj.width / 2
-    const uStart = len
-    const vStart = len + len / 4
-    // for (let i = 0; i < len; i++) {
-    //     const y = obj.data[i]
-    //     const u = obj.data[uStart + (i>>2)]
-    //     const v = obj.data[vStart + (i>>2)]
-    //     img.data[(i << 2) + 0] = y
-    //     img.data[(i << 2) + 1] = u
-    //     img.data[(i << 2) + 2] = v
-    //     img.data[(i << 2) + 3] = 0xff
-    // }
-    for (let j = 0; j < obj.height; j++) {
-        for (let i = 0; i < obj.width; i++) {
-            const idx = j * obj.width + i
-            const idxRgb = idx << 2
-            const y = obj.data[idx]
-            const u = obj.data[uStart + (j>>1) * hWidth + (i>>1)]
-            const v = obj.data[vStart + (j>>1) * hWidth + (i>>1)]
-            let r = y + 1.402 * (v - 128)
-            let g = y - 0.34413 * (u - 128) - 0.71414*(v - 128)
-            let b = y + 1.772 * (u - 128)
-            if (r < 0) r = 0
-            if (g < 0) g = 0
-            if (b < 0) b = 0
-            if (r > 255) r = 255
-            if (g > 255) g = 255
-            if (b > 255) b = 255
-            img.data[idxRgb + 0] = r
-            img.data[idxRgb + 1] = g
-            img.data[idxRgb + 2] = b
-            img.data[idxRgb + 3] = 0xff
-        }
-    }
-    // oc.putImageData(img, 0, 0)
-    const ib = await createImageBitmap(img)
-    console.log('ImageBitmap:', ib)
-    oc.drawImage(ib, 0, 0, obj.width, obj.height, 0, 0, 800, 480) // 缩放
 }
 
 function stop() {

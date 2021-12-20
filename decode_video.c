@@ -149,10 +149,11 @@ static ErrorCode decode(AVCodecContext* dec_ctx, AVFrame* frame, AVPacket* pkt, 
 				break;
 			}
 
-			res = copyFrameData(frame, outFrame, ptslist);
-			if (res != kErrorCode_Success) {
-				break;
-			}
+			// res = copyFrameData(frame, outFrame, ptslist);
+			// if (res != kErrorCode_Success) {
+			// 	break;
+			// }
+			outFrame = frame;
 
 			videoCallback(outFrame->data[0], outFrame->data[1], outFrame->data[2], outFrame->linesize[0], outFrame->linesize[1], outFrame->linesize[2], outFrame->width, outFrame->height, outFrame->pts);
 
